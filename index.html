@@ -181,16 +181,17 @@
 </head>
 <body>
     <div class="container">
-        <!-- Заголовок -->
+        <!-- Kichwa -->
         <div class="header">
             <h1>🦅 Jifunze Kikurya</h1>
             <p>Kujifunza lugha ya Kikurya kwa urahisi</p>
+            <p style="font-size: 0.9em; margin-top: 10px;">📍 Tanzania 🇹🇿 na Kenya 🇰🇪 • Wasemaji: 738,000+</p>
         </div>
 
-        <!-- Урок -->
+        <!-- Somo -->
         <div class="lesson-card" id="lessonCard">
             <div class="lesson-title">
-                Mafunzo ya 1: Salamu (Урок 1: Приветствия)
+                Somo la 1: Salamu za Kikurya
             </div>
             
             <div class="progress-bar">
@@ -198,7 +199,7 @@
             </div>
 
             <div class="question-container" id="questionContainer">
-                <div class="question">Переведите на кикурья:</div>
+                <div class="question">Tafsiri kwa Kikurya:</div>
                 
                 <div class="swahili-word">
                     <span>"Habari"</span>
@@ -212,22 +213,26 @@
                 </div>
 
                 <div class="explanation" id="explanation">
-                    <h4>💡 Maelezo (Объяснение):</h4>
-                    <p><strong>Indagu</strong> - стандартное приветствие в кикурья, эквивалент 'Habari' на суахили. Используется в любое время дня.</p>
+                    <h4>💡 Maelezo:</h4>
+                    <p><strong>Indagu</strong> - ni salamu ya kawaida ya Kikurya, sawa na 'Habari' ya Kiswahili. Hutumiwa wakati wowote wa mchana.</p>
                 </div>
 
                 <button class="button" id="nextBtn" onclick="nextQuestion()" style="display: none;">
-                    Swali lijalo (Следующий вопрос)
+                    Swali Lijalo
                 </button>
             </div>
         </div>
 
-        <!-- Завершение урока -->
+        <!-- Malizia somo -->
         <div class="completion-card" id="completionCard">
             <div style="font-size: 4em;">🎉</div>
-            <h2>Hongera! Урок завершен!</h2>
-            <div class="score">Ваш результат: <span id="scoreText">3 из 3 (100%)</span></div>
-            <button class="button" onclick="restartLesson()">Rudia tena (Повторить урок)</button>
+            <h2>Hongera! Umemalizia somo!</h2>
+            <div class="score">Matokeo yako: <span id="scoreText">3 kati ya 3 (100%)</span></div>
+            <button class="button" onclick="restartLesson()">Rudia Tena</button>
+            <p style="margin-top: 20px; color: #666;">
+                <strong>Kwa wasemaji wa Kikurya:</strong> Je, tafsiri zetu ni sahihi? 
+                <a href="https://github.com/[username]/jifunze-kikurya/issues" target="_blank">Tuambie hapa</a> 📝
+            </p>
         </div>
     </div>
 
@@ -241,19 +246,19 @@
                 swahili: "Habari",
                 options: ["Indagu", "Bwega", "Nkorire", "Mocha"],
                 correct: 0,
-                explanation: "Indagu - стандартное приветствие в кикурья, эквивалент 'Habari' на суахили."
+                explanation: "Indagu - ni salamu ya kawaida ya Kikurya, sawa na 'Habari' ya Kiswahili."
             },
             {
                 swahili: "Asante",
                 options: ["Bwega", "Nosante", "Indagu", "Mocha"],
                 correct: 1,
-                explanation: "Nosante - 'спасибо' на кикурья, похоже на суахилийское 'asante'."
+                explanation: "Nosante - ni 'asante' kwa Kikurya, inafanana na 'asante' ya Kiswahili."
             },
             {
                 swahili: "Baba",
                 options: ["Mama", "Tata", "Mchana", "Kaka"],
                 correct: 1,
-                explanation: "Tata - 'отец' в кикурья, характерно для многих языков банту."
+                explanation: "Tata - ni 'baba' kwa Kikurya, ni kawaida katika lugha za Kibantu."
             }
         ];
 
@@ -262,7 +267,7 @@
             
             selectedAnswer = true;
             
-            // Показать правильные/неправильные ответы
+            // Onyesha majibu sahihi/yasiyosahihi
             const options = document.querySelectorAll('.option');
             options.forEach((option, index) => {
                 if (index === questions[currentQuestion].correct) {
@@ -272,12 +277,12 @@
                 }
             });
 
-            // Обновить счет
+            // Sasisha alama
             if (isCorrect) {
                 score++;
             }
 
-            // Показать объяснение
+            // Onyesha maelezo
             document.getElementById('explanation').classList.add('show');
             document.getElementById('nextBtn').style.display = 'block';
         }
@@ -295,11 +300,11 @@
             selectedAnswer = false;
             const question = questions[currentQuestion];
             
-            // Обновить прогресс
+            // Sasisha maendeleo
             const progress = ((currentQuestion + 1) / questions.length) * 100;
             document.getElementById('progressFill').style.width = progress + '%';
             
-            // Обновить содержимое
+            // Sasisha yaliyomo
             document.querySelector('.swahili-word span').textContent = `"${question.swahili}"`;
             
             const optionsContainer = document.getElementById('options');
@@ -313,9 +318,9 @@
                 optionsContainer.appendChild(div);
             });
             
-            // Скрыть объяснение и кнопку
+            // Ficha maelezo na kitufe
             document.getElementById('explanation').classList.remove('show');
-            document.getElementById('explanation').querySelector('p').textContent = question.explanation;
+            document.getElementById('explanation').querySelector('p').innerHTML = `<strong>${question.options[question.correct]}</strong> - ${question.explanation}`;
             document.getElementById('nextBtn').style.display = 'none';
         }
 
@@ -324,7 +329,7 @@
             document.getElementById('completionCard').classList.add('show');
             
             const percentage = Math.round((score / questions.length) * 100);
-            document.getElementById('scoreText').textContent = `${score} из ${questions.length} (${percentage}%)`;
+            document.getElementById('scoreText').textContent = `${score} kati ya ${questions.length} (${percentage}%)`;
         }
 
         function restartLesson() {
