@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="sw">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🦅 Jifunze Kikurya</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: system-ui, -apple-system, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: #333;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .header {
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            text-align: center;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            color: #2d3748;
+            margin-bottom: 10px;
+        }
+
+        .lesson-card {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        }
+
+        .lesson-title {
+            font-size: 1.8em;
+            color: #2d3748;
+            margin-bottom: 20px;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #e2e8f0;
+            border-radius: 4px;
+            margin: 20px 0;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #48bb78, #38a169);
+            transition: width 0.3s ease;
+            border-radius: 4px;
+        }
+
+        .question {
+            font-size: 1.3em;
+            color: #2d3748;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+
+        .swahili-word {
+            background: #ebf8ff;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            margin: 20px 0;
+            border-left: 4px solid #3182ce;
+        }
+
+        .swahili-word span {
+            font-size: 1.8em;
+            font-weight: bold;
+            color: #3182ce;
+        }
+
+        .options {
+            display: grid;
+            gap: 10px;
+            margin: 20px 0;
+        }
+
+        .option {
+            padding: 15px 20px;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            background: white;
+            cursor: pointer;
+            font-size: 1.1em;
+            transition: all 0.2s;
+        }
+
+        .option:hover {
+            border-color: #3182ce;
+            background: #f7fafc;
+        }
+
+        .option.selected {
+            border-color: #3182ce;
+            background: #ebf8ff;
+        }
+
+        .option.correct {
+            border-color: #38a169;
+            background: #f0fff4;
+        }
+
+        .option.wrong {
+            border-color: #e53e3e;
+            background: #fef5f5;
+        }
+
+        .explanation {
+            background: #fffdf7;
+            border: 1px solid #f6e05e;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            display: none;
+        }
+
+        .explanation.show {
+            display: block;
+        }
+
+        .button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1em;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+            margin: 20px 0;
+        }
+
+        .button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .completion-card {
+            background: white;
+            padding: 40px;
+            border-radius: 15px;
+            text-align: center;
+            display: none;
+        }
+
+        .completion-card.show {
+            display: block;
+        }
+
+        @media (max-width: 600px) {
+            .header h1 {
+                font-size: 2em;
+            }
+            .lesson-card {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Заголовок -->
+        <div class="header">
+            <h1>🦅 Jifunze Kikurya</h1>
+            <p>Kujifunza lugha ya Kikurya kwa urahisi</p>
+        </div>
+
+        <!-- Урок -->
+        <div class="lesson-card" id="lessonCard">
+            <div class="lesson-title">
+                Mafunzo ya 1: Salamu (Урок 1: Приветствия)
+            </div>
+            
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill" style="width: 33%"></div>
+            </div>
+
+            <div class="question-container" id="questionContainer">
+                <div class="question">Переведите на кикурья:</div>
+                
+                <div class="swahili-word">
+                    <span>"Habari"</span>
+                </div>
+
+                <div class="options" id="options">
+                    <div class="option" onclick="selectAnswer(this, 0, true)">Indagu</div>
+                    <div class="option" onclick="selectAnswer(this, 1, false)">Bwega</div>
+                    <div class="option" onclick="selectAnswer(this, 2, false)">Nkorire</div>
+                    <div class="option" onclick="selectAnswer(this, 3, false)">Mocha</div>
+                </div>
+
+                <div class="explanation" id="explanation">
+                    <h4>💡 Maelezo (Объяснение):</h4>
+                    <p><strong>Indagu</strong> - стандартное приветствие в кикурья, эквивалент 'Habari' на суахили. Используется в любое время дня.</p>
+                </div>
+
+                <button class="button" id="nextBtn" onclick="nextQuestion()" style="display: none;">
+                    Swali lijalo (Следующий вопрос)
+                </button>
+            </div>
+        </div>
+
+        <!-- Завершение урока -->
+        <div class="completion-card" id="completionCard">
+            <div style="font-size: 4em;">🎉</div>
+            <h2>Hongera! Урок завершен!</h2>
+            <div class="score">Ваш результат: <span id="scoreText">3 из 3 (100%)</span></div>
+            <button class="button" onclick="restartLesson()">Rudia tena (Повторить урок)</button>
+        </div>
+    </div>
+
+    <script>
+        let currentQuestion = 0;
+        let score = 0;
+        let selectedAnswer = false;
+
+        const questions = [
+            {
+                swahili: "Habari",
+                options: ["Indagu", "Bwega", "Nkorire", "Mocha"],
+                correct: 0,
+                explanation: "Indagu - стандартное приветствие в кикурья, эквивалент 'Habari' на суахили."
+            },
+            {
+                swahili: "Asante",
+                options: ["Bwega", "Nosante", "Indagu", "Mocha"],
+                correct: 1,
+                explanation: "Nosante - 'спасибо' на кикурья, похоже на суахилийское 'asante'."
+            },
+            {
+                swahili: "Baba",
+                options: ["Mama", "Tata", "Mchana", "Kaka"],
+                correct: 1,
+                explanation: "Tata - 'отец' в кикурья, характерно для многих языков банту."
+            }
+        ];
+
+        function selectAnswer(element, answerIndex, isCorrect) {
+            if (selectedAnswer) return;
+            
+            selectedAnswer = true;
+            
+            // Показать правильные/неправильные ответы
+            const options = document.querySelectorAll('.option');
+            options.forEach((option, index) => {
+                if (index === questions[currentQuestion].correct) {
+                    option.classList.add('correct');
+                } else if (index === answerIndex && !isCorrect) {
+                    option.classList.add('wrong');
+                }
+            });
+
+            // Обновить счет
+            if (isCorrect) {
+                score++;
+            }
+
+            // Показать объяснение
+            document.getElementById('explanation').classList.add('show');
+            document.getElementById('nextBtn').style.display = 'block';
+        }
+
+        function nextQuestion() {
+            if (currentQuestion < questions.length - 1) {
+                currentQuestion++;
+                loadQuestion();
+            } else {
+                showCompletion();
+            }
+        }
+
+        function loadQuestion() {
+            selectedAnswer = false;
+            const question = questions[currentQuestion];
+            
+            // Обновить прогресс
+            const progress = ((currentQuestion + 1) / questions.length) * 100;
+            document.getElementById('progressFill').style.width = progress + '%';
+            
+            // Обновить содержимое
+            document.querySelector('.swahili-word span').textContent = `"${question.swahili}"`;
+            
+            const optionsContainer = document.getElementById('options');
+            optionsContainer.innerHTML = '';
+            
+            question.options.forEach((option, index) => {
+                const div = document.createElement('div');
+                div.className = 'option';
+                div.textContent = option;
+                div.onclick = () => selectAnswer(div, index, index === question.correct);
+                optionsContainer.appendChild(div);
+            });
+            
+            // Скрыть объяснение и кнопку
+            document.getElementById('explanation').classList.remove('show');
+            document.getElementById('explanation').querySelector('p').textContent = question.explanation;
+            document.getElementById('nextBtn').style.display = 'none';
+        }
+
+        function showCompletion() {
+            document.getElementById('lessonCard').style.display = 'none';
+            document.getElementById('completionCard').classList.add('show');
+            
+            const percentage = Math.round((score / questions.length) * 100);
+            document.getElementById('scoreText').textContent = `${score} из ${questions.length} (${percentage}%)`;
+        }
+
+        function restartLesson() {
+            currentQuestion = 0;
+            score = 0;
+            
+            document.getElementById('lessonCard').style.display = 'block';
+            document.getElementById('completionCard').classList.remove('show');
+            
+            loadQuestion();
+        }
+    </script>
+</body>
+</html>
