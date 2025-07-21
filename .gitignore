@@ -137,3 +137,14 @@ dist
 # Vite logs files
 vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
+# Дополнительно для Next.js
+.next/
+out/
+
+# Личные заметки
+notes.md
+todo.md
+personal/
+
+# Аудио файлы (пока что)
+# /public/audio/*.wav
