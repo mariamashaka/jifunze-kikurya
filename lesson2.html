@@ -1,0 +1,634 @@
+<!DOCTYPE html>
+<html lang="sw">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🦅 Somo la 2: Familia - Jifunze Kikurya</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: system-ui, -apple-system, sans-serif;
+            background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: #333;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .header {
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            text-align: center;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            color: #2d3748;
+            margin-bottom: 10px;
+        }
+
+        .back-button {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background: rgba(255,255,255,0.9);
+            border: none;
+            padding: 10px 15px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 1em;
+        }
+
+        .lesson-card {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        }
+
+        .lesson-title {
+            font-size: 1.8em;
+            color: #2d3748;
+            margin-bottom: 20px;
+        }
+
+        .progress-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .progress-bar {
+            flex-grow: 1;
+            height: 8px;
+            background: #e2e8f0;
+            border-radius: 4px;
+            margin-right: 15px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #48bb78, #38a169);
+            transition: width 0.3s ease;
+            border-radius: 4px;
+        }
+
+        .question-counter {
+            font-size: 1em;
+            color: #4a5568;
+            font-weight: 600;
+        }
+
+        .question {
+            font-size: 1.3em;
+            color: #2d3748;
+            margin-bottom: 20px;
+            font-weight: 600;
+            text-align: center;
+        }
+
+        .swahili-sentence {
+            background: #e6fffa;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            margin: 20px 0;
+            border-left: 4px solid #38a169;
+        }
+
+        .swahili-sentence span {
+            font-size: 1.8em;
+            font-weight: bold;
+            color: #38a169;
+        }
+
+        .options {
+            display: grid;
+            gap: 10px;
+            margin: 20px 0;
+        }
+
+        .option {
+            padding: 15px 20px;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            background: white;
+            cursor: pointer;
+            font-size: 1.1em;
+            transition: all 0.2s;
+            text-align: center;
+        }
+
+        .option:hover {
+            border-color: #38a169;
+            background: #f0fff4;
+        }
+
+        .option.selected {
+            border-color: #38a169;
+            background: #e6fffa;
+        }
+
+        .option.correct {
+            border-color: #38a169;
+            background: #f0fff4;
+        }
+
+        .option.wrong {
+            border-color: #e53e3e;
+            background: #fef5f5;
+        }
+
+        /* Составление фразы */
+        .word-bank {
+            background: #f7fafc;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+
+        .word-bank h4 {
+            color: #2d3748;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .available-words {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+            min-height: 60px;
+        }
+
+        .word-option {
+            padding: 8px 15px;
+            background: #e6fffa;
+            border: 2px solid #38a169;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: all 0.2s;
+        }
+
+        .word-option:hover {
+            background: #38a169;
+            color: white;
+        }
+
+        .word-option.used {
+            opacity: 0.3;
+            pointer-events: none;
+        }
+
+        .sentence-builder {
+            background: white;
+            border: 2px dashed #cbd5e0;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            min-height: 80px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .sentence-builder.has-words {
+            border-color: #38a169;
+            border-style: solid;
+        }
+
+        .selected-word {
+            padding: 8px 15px;
+            background: #38a169;
+            color: white;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: all 0.2s;
+        }
+
+        .selected-word:hover {
+            background: #2f855a;
+        }
+
+        .placeholder-text {
+            color: #a0aec0;
+            font-style: italic;
+        }
+
+        .explanation {
+            background: #fffdf7;
+            border: 1px solid #f6e05e;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            display: none;
+        }
+
+        .explanation.show {
+            display: block;
+        }
+
+        .button {
+            background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
+            color: white;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1em;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+            margin: 20px 0;
+        }
+
+        .button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(72, 187, 120, 0.3);
+        }
+
+        .button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .completion-card {
+            background: white;
+            padding: 40px;
+            border-radius: 15px;
+            text-align: center;
+            display: none;
+        }
+
+        .completion-card.show {
+            display: block;
+        }
+
+        .lesson-complete-actions {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 20px;
+        }
+
+        .lesson-complete-actions button {
+            width: auto;
+            min-width: 150px;
+        }
+
+        @media (max-width: 600px) {
+            .header h1 {
+                font-size: 2em;
+            }
+            .lesson-card {
+                padding: 20px;
+            }
+            .available-words {
+                justify-content: flex-start;
+            }
+        }
+    </style>
+</head>
+<body>
+    <button class="back-button" onclick="window.location.href='index.html'">← Nyuma</button>
+    
+    <div class="container">
+        <!-- Kichwa -->
+        <div class="header">
+            <h1>🏠 Somo la 2: Familia</h1>
+            <p>Jifunza maneno ya familia katika Kikurya</p>
+        </div>
+
+        <!-- Somo -->
+        <div class="lesson-card" id="lessonCard">
+            <div class="lesson-title">Familia na Ndugu</div>
+            
+            <div class="progress-container">
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill" style="width: 10%"></div>
+                </div>
+                <div class="question-counter">
+                    <span id="currentQ">1</span> / <span id="totalQ">10</span>
+                </div>
+            </div>
+
+            <div class="question-container" id="questionContainer">
+                <!-- Content will be loaded by JavaScript -->
+            </div>
+        </div>
+
+        <!-- Malizia somo -->
+        <div class="completion-card" id="completionCard">
+            <div style="font-size: 4em;">🎉</div>
+            <h2>Hongera! Umemalizia somo la familia!</h2>
+            <div class="score">Matokeo yako: <span id="scoreText">8 kati ya 10 (80%)</span></div>
+            <div class="lesson-complete-actions">
+                <button class="button" onclick="restartLesson()">Rudia Tena</button>
+                <button class="button" onclick="window.location.href='lesson3.html'" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">Somo Lijalo</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentQuestion = 0;
+        let score = 0;
+        let selectedAnswer = null;
+        let selectedWords = [];
+
+        const questions = [
+            {
+                type: "translation",
+                question: "Tafsiri kwa Kikurya:",
+                swahili: "Baba",
+                options: ["Mama", "Tata", "Mchana", "Kaka"],
+                correct: 1,
+                explanation: "Tata - ni 'baba' kwa Kikurya, ni kawaida katika lugha za Kibantu."
+            },
+            {
+                type: "translation", 
+                question: "Tafsiri kwa Kikurya:",
+                swahili: "Mama",
+                options: ["Nyaboke", "Mawe", "Tata", "Mama"],
+                correct: 3,
+                explanation: "Mama - ni 'mama' kwa Kikurya, sawa na Kiswahili."
+            },
+            {
+                type: "sentence_building",
+                question: "Jenga sentensi hii kwa Kikurya:",
+                swahili: "Baba yangu ni mzuri",
+                words: ["Tata", "wane", "nende", "bwega"],
+                correct_order: ["Tata", "wane", "nende", "bwega"],
+                explanation: "Tata wane nende bwega - 'Baba yangu ni mzuri' kwa Kikurya."
+            },
+            {
+                type: "multiple_choice",
+                question: "Nini maana ya 'Nyaboke' katika Kikurya?",
+                options: ["Mwana wa kiume", "Mwana wa kike", "Mama", "Bibi"],
+                correct: 1,
+                explanation: "Nyaboke - ni 'mwana wa kike' au 'binti' kwa Kikurya."
+            },
+            {
+                type: "translation",
+                question: "Tafsiri kwa Kikurya:",
+                swahili: "Mtoto",
+                options: ["Omwana", "Nyaboke", "Tata", "Mama"],
+                correct: 0,
+                explanation: "Omwana - ni 'mtoto' kwa Kikurya, bila kujali jinsi."
+            },
+            {
+                type: "sentence_building",
+                question: "Jenga sentensi hii kwa Kikurya:",
+                swahili: "Mtoto wangu ni mzuri",
+                words: ["Omwana", "wane", "nende", "bwega"],
+                correct_order: ["Omwana", "wane", "nende", "bwega"],
+                explanation: "Omwana wane nende bwega - 'Mtoto wangu ni mzuri' kwa Kikurya."
+            },
+            {
+                type: "multiple_choice",
+                question: "Nini maana ya 'Rogaya' katika Kikurya?",
+                options: ["Baba", "Mama", "Mwana wa kiume", "Bibi"],
+                correct: 2,
+                explanation: "Rogaya - ni 'mwana wa kiume' au 'mvulana' kwa Kikurya."
+            },
+            {
+                type: "translation",
+                question: "Tafsiri kwa Kikurya:",
+                swahili: "Kaka",
+                options: ["Muchacha", "Mchana", "Nyaboke", "Tata"],
+                correct: 1,
+                explanation: "Mchana - ni 'kaka' kwa Kikurya."
+            },
+            {
+                type: "sentence_building",
+                question: "Jenga sentensi hii kwa Kikurya:",
+                swahili: "Kaka yangu ni mkuu",
+                words: ["Mchana", "wane", "nende", "mokuru"],
+                correct_order: ["Mchana", "wane", "nende", "mokuru"],
+                explanation: "Mchana wane nende mokuru - 'Kaka yangu ni mkuu' kwa Kikurya."
+            },
+            {
+                type: "multiple_choice",
+                question: "Jinsi gani unasema 'familia yangu' kwa Kikurya?",
+                options: ["Abanto bane", "Familia yane", "Nyumba yane", "Watu wane"],
+                correct: 0,
+                explanation: "Abanto bane - ni 'familia yangu' kwa Kikurya. 'Abanto' ni watu, 'bane' ni yangu."
+            }
+        ];
+
+        function loadQuestion() {
+            selectedAnswer = null;
+            selectedWords = [];
+            const question = questions[currentQuestion];
+            
+            // Update progress
+            const progress = ((currentQuestion + 1) / questions.length) * 100;
+            document.getElementById('progressFill').style.width = progress + '%';
+            document.getElementById('currentQ').textContent = currentQuestion + 1;
+            document.getElementById('totalQ').textContent = questions.length;
+            
+            // Clear container
+            const container = document.getElementById('questionContainer');
+            container.innerHTML = '';
+            
+            if (question.type === "translation" || question.type === "multiple_choice") {
+                container.innerHTML = `
+                    <div class="question">${question.question}</div>
+                    ${question.swahili ? `<div class="swahili-sentence"><span>"${question.swahili}"</span></div>` : ''}
+                    <div class="options" id="options"></div>
+                    <div class="explanation" id="explanation">
+                        <h4>💡 Maelezo:</h4>
+                        <p>${question.explanation}</p>
+                    </div>
+                    <button class="button" id="nextBtn" onclick="nextQuestion()" style="display: none;">Swali Lijalo</button>
+                `;
+                
+                const optionsContainer = document.getElementById('options');
+                question.options.forEach((option, index) => {
+                    const div = document.createElement('div');
+                    div.className = 'option';
+                    div.textContent = option;
+                    div.onclick = () => selectAnswer(div, index, index === question.correct);
+                    optionsContainer.appendChild(div);
+                });
+                
+            } else if (question.type === "sentence_building") {
+                container.innerHTML = `
+                    <div class="question">${question.question}</div>
+                    <div class="swahili-sentence"><span>"${question.swahili}"</span></div>
+                    
+                    <div class="word-bank">
+                        <h4>Chagua maneno:</h4>
+                        <div class="available-words" id="availableWords"></div>
+                    </div>
+                    
+                    <div class="sentence-builder" id="sentenceBuilder">
+                        <span class="placeholder-text">Bonyeza maneno hapo juu kujenga sentensi...</span>
+                    </div>
+                    
+                    <div class="explanation" id="explanation">
+                        <h4>💡 Maelezo:</h4>
+                        <p>${question.explanation}</p>
+                    </div>
+                    <button class="button" id="checkBtn" onclick="checkSentence()" disabled>Kagua Jibu</button>
+                    <button class="button" id="nextBtn" onclick="nextQuestion()" style="display: none;">Swali Lijalo</button>
+                `;
+                
+                const availableWords = document.getElementById('availableWords');
+                question.words.forEach((word, index) => {
+                    const span = document.createElement('span');
+                    span.className = 'word-option';
+                    span.textContent = word;
+                    span.onclick = () => selectWord(span, word, index);
+                    availableWords.appendChild(span);
+                });
+            }
+        }
+
+        function selectAnswer(element, answerIndex, isCorrect) {
+            if (selectedAnswer !== null) return;
+            
+            selectedAnswer = answerIndex;
+            
+            const options = document.querySelectorAll('.option');
+            options.forEach((option, index) => {
+                if (index === questions[currentQuestion].correct) {
+                    option.classList.add('correct');
+                } else if (index === answerIndex && !isCorrect) {
+                    option.classList.add('wrong');
+                }
+            });
+
+            if (isCorrect) score++;
+
+            document.getElementById('explanation').classList.add('show');
+            document.getElementById('nextBtn').style.display = 'block';
+        }
+
+        function selectWord(element, word, index) {
+            if (element.classList.contains('used')) return;
+            
+            selectedWords.push(word);
+            element.classList.add('used');
+            
+            updateSentenceBuilder();
+            
+            const checkBtn = document.getElementById('checkBtn');
+            checkBtn.disabled = selectedWords.length === 0;
+        }
+
+        function updateSentenceBuilder() {
+            const builder = document.getElementById('sentenceBuilder');
+            
+            if (selectedWords.length === 0) {
+                builder.innerHTML = '<span class="placeholder-text">Bonyeza maneno hapo juu kujenga sentensi...</span>';
+                builder.classList.remove('has-words');
+            } else {
+                builder.innerHTML = '';
+                builder.classList.add('has-words');
+                
+                selectedWords.forEach((word, index) => {
+                    const span = document.createElement('span');
+                    span.className = 'selected-word';
+                    span.textContent = word;
+                    span.onclick = () => removeWord(index);
+                    builder.appendChild(span);
+                });
+            }
+        }
+
+        function removeWord(index) {
+            const removedWord = selectedWords[index];
+            selectedWords.splice(index, 1);
+            
+            // Re-enable word in bank
+            const wordOptions = document.querySelectorAll('.word-option');
+            wordOptions.forEach(option => {
+                if (option.textContent === removedWord && option.classList.contains('used')) {
+                    option.classList.remove('used');
+                }
+            });
+            
+            updateSentenceBuilder();
+            
+            const checkBtn = document.getElementById('checkBtn');
+            checkBtn.disabled = selectedWords.length === 0;
+        }
+
+        function checkSentence() {
+            const question = questions[currentQuestion];
+            const userSentence = selectedWords.join(' ');
+            const correctSentence = question.correct_order.join(' ');
+            
+            const isCorrect = userSentence === correctSentence;
+            
+            if (isCorrect) {
+                score++;
+                document.getElementById('sentenceBuilder').style.borderColor = '#38a169';
+                document.getElementById('sentenceBuilder').style.backgroundColor = '#f0fff4';
+            } else {
+                document.getElementById('sentenceBuilder').style.borderColor = '#e53e3e';
+                document.getElementById('sentenceBuilder').style.backgroundColor = '#fef5f5';
+            }
+            
+            document.getElementById('explanation').classList.add('show');
+            document.getElementById('checkBtn').style.display = 'none';
+            document.getElementById('nextBtn').style.display = 'block';
+            
+            // Disable word selection
+            const wordOptions = document.querySelectorAll('.word-option');
+            wordOptions.forEach(option => {
+                option.style.pointerEvents = 'none';
+            });
+        }
+
+        function nextQuestion() {
+            if (currentQuestion < questions.length - 1) {
+                currentQuestion++;
+                loadQuestion();
+            } else {
+                showCompletion();
+            }
+        }
+
+        function showCompletion() {
+            document.getElementById('lessonCard').style.display = 'none';
+            document.getElementById('completionCard').classList.add('show');
+            
+            const percentage = Math.round((score / questions.length) * 100);
+            document.getElementById('scoreText').textContent = `${score} kati ya ${questions.length} (${percentage}%)`;
+        }
+
+        function restartLesson() {
+            currentQuestion = 0;
+            score = 0;
+            
+            document.getElementById('lessonCard').style.display = 'block';
+            document.getElementById('completionCard').classList.remove('show');
+            
+            loadQuestion();
+        }
+
+        // Initialize
+        loadQuestion();
+    </script>
+</body>
+</html>
